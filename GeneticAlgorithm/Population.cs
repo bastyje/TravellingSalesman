@@ -74,7 +74,13 @@ namespace GeneticAlgorithm
                 for (int j = index; j < _genomes[i].Genes.Count; j++)
                 {
                     _genomes[i].Genes[j] = tmp2.Genes[j];
-                    _genomes[i].Pair.Genes[j] = tmp1.Genes[j];
+                    _genomes[i].Pair.Genes[j] = tmp1
+                        
+                        
+                        
+                        
+                        
+    .Genes[j];
                 }
             }
         }
