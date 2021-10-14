@@ -4,8 +4,10 @@ using System.Text;
 
 namespace GeneticAlgorithm
 {
-    public enum Gene
+    class Launcher
     {
-        ZERO = 0, ONE = 1
+        public static void Main(string[] Args)
+        {
+        }
     }
 }
