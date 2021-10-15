@@ -6,21 +6,26 @@ namespace GeneticAlgorithm
     public class Population
     {
         private int _size;
-        public List<Genome> _genomes { get; set; }
+        public List<Genome> Genomes { get; set; }
+        private double _probabilityOfMutation;
 
-        public Population(List<Genome> population)
+        public Population(List<Genome> population, double probability)
         {
-            this._genomes = population ?? throw new NullReferenceException();
+            this._probabilityOfMutation = (probability >= 0 || 1 > probability) 
+                ? probability : throw new ArgumentException();
+            this.Genomes = population ?? throw new NullReferenceException();
             this._size = population.Count;
         }
 
-        public Population(int size, int genomeSize)
+        public Population(int size, int genomeSize, double probability)
         {
             if (!(genomeSize > 0)) throw new ArgumentException();
+            this._probabilityOfMutation = (probability >= 0 || 1 > probability)
+                ? probability : throw new ArgumentException();
             this._size = size > 0 ? size : throw new ArgumentException();
-            this._genomes = new List<Genome>(size);
+            this.Genomes = new List<Genome>(size);
             for (int i = 0; i < size; i++) 
-                _genomes.Add(new Genome(genomeSize));
+                Genomes.Add(new Genome(genomeSize));
         }
 
         public void NextGeneration()
@@ -32,30 +37,30 @@ namespace GeneticAlgorithm
 
         private void select()
         {
-            WheelOfFortune wheel = new WheelOfFortune(_genomes);
+            WheelOfFortune wheel = new WheelOfFortune(Genomes);
             List<Genome> tmp = new List<Genome>();
             Genome result;
-            for (int i = 0; i < _genomes.Count / 2; i++)
+            for (int i = 0; i < Genomes.Count / 2; i++)
             {
                 tmp.Add(result = wheel.Spin());
                 tmp.Add(result.Copy());
             }
-            _genomes = tmp;
+            Genomes = tmp;
         }
 
-        public void pair()
+        private void pair()
         {
             Random random = new Random();
             int index;
-            for (int i = 0; i < _genomes.Count; i++)
+            for (int i = 0; i < Genomes.Count; i++)
             {
                 index = random.Next(0, _size);
-                if (_genomes[i].Pair == null && _genomes[index].Pair == null && i != index)
+                if (Genomes[i].Pair == null && Genomes[index].Pair == null && i != index)
                 {
-                    _genomes[i].Pair = _genomes[index];
-                    _genomes[index].Pair = _genomes[i];
+                    Genomes[i].Pair = Genomes[index];
+                    Genomes[index].Pair = Genomes[i];
                 }
-                else if (_genomes[i].Pair != null) continue;
+                else if (Genomes[i].Pair != null) continue;
                 else i--;
             }
         }
@@ -66,33 +71,33 @@ namespace GeneticAlgorithm
             Genome tmp1, tmp2;
             Random random = new Random();
             int index;
-            for (int i = 0; i < _genomes.Count; i++)
+            for (int i = 0; i < Genomes.Count; i++)
             {
-                index = random.Next(0, _genomes[i].Genes.Count);
-                tmp1 = _genomes[i].Copy();
-                tmp2 = _genomes[i].Pair.Copy();
-                for (int j = index; j < _genomes[i].Genes.Count; j++)
+                index = random.Next(0, Genomes[i].Genes.Count);
+                tmp1 = Genomes[i].Copy();
+                tmp2 = Genomes[i].Pair.Copy();
+                for (int j = index; j < Genomes[i].Genes.Count; j++)
                 {
-                    _genomes[i].Genes[j] = tmp2.Genes[j];
-                    _genomes[i].Pair.Genes[j] = tmp1
-                        
-                        
-                        
-                        
-                        
-    .Genes[j];
+                    Genomes[i].Genes[j] = tmp2.Genes[j];
+                    Genomes[i].Pair.Genes[j] = tmp1.Genes[j];
                 }
             }
         }
 
         private void mutate()
         {
-
-        }
-
-        private void swap()
-        {
-
+            Random random = new Random();
+            double randVal;
+            for (int i = 0; i < Genomes.Count; i++)
+            {
+                for (int j = 0; j < Genomes[i].Genes.Count; j++)
+                {
+                    randVal = random.NextDouble();
+                    if (0 <= randVal && randVal < _probabilityOfMutation)
+                        Genomes[i].Genes[j] = Genomes[i].Genes[j].Equals(Gene.ONE) 
+                            ? Gene.ZERO : Gene.ONE;
+                }
+            }
         }
     }
 
@@ -133,7 +138,6 @@ namespace GeneticAlgorithm
                 this.Start = start;
                 this.End = end;
                 this.Gen = gen;
-
             }
         }
     }
