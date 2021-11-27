@@ -30,14 +30,14 @@ namespace GeneticAlgorithm
 
         public void NextGeneration()
         {
-            select();
-            crossover();
-            mutate();
+            Select();
+            Crossover();
+            Mutate();
         }
 
-        private void select()
+        private void Select()
         {
-            WheelOfFortune wheel = new WheelOfFortune(Genomes);
+            Reproduction wheel = new Reproduction(Genomes);
             List<Genome> tmp = new List<Genome>();
             Genome result;
             for (int i = 0; i < Genomes.Count / 2; i++)
@@ -48,7 +48,7 @@ namespace GeneticAlgorithm
             Genomes = tmp;
         }
 
-        private void pair()
+        private void Pair()
         {
             Random random = new Random();
             int index;
@@ -65,9 +65,9 @@ namespace GeneticAlgorithm
             }
         }
 
-        private void crossover()
+        private void Crossover()
         {
-            pair();
+            Pair();
             Genome tmp1, tmp2;
             Random random = new Random();
             int index;
@@ -84,7 +84,7 @@ namespace GeneticAlgorithm
             }
         }
 
-        private void mutate()
+        private void Mutate()
         {
             Random random = new Random();
             double randVal;
@@ -101,12 +101,12 @@ namespace GeneticAlgorithm
         }
     }
 
-    class WheelOfFortune
+    class Reproduction
     {
         private List<Field> _fields;
         private int _sum;
 
-        public WheelOfFortune(List<Genome> genomes)
+        public Reproduction(List<Genome> genomes)
         {
             _fields = new List<Field>();
             int sum = 0;
