@@ -4,14 +4,13 @@ using System.Text;
 
 namespace GeneticAlgorithm
 {
-    public class Genome
+    public class Chromosome
     {
         public List<Gene> Genes { get; }
         public int Adaptation { get; }
-        public Genome Pair { get; set; }
         public int Length { get; }
 
-        public Genome(List<Gene> genes)
+        public Chromosome(List<Gene> genes)
         {
             Genes = genes ?? genes;
         }
@@ -23,15 +22,15 @@ namespace GeneticAlgorithm
         /// <exception cref="System.ArgumentException">
         /// Thrown when passed "length" argument is equal or less than 0.
         /// </exception>
-        public Genome(int length)
+        public Chromosome(int length)
         {
-            if (!(length > 0)) throw new ArgumentException();
+            if (!(length > 0)) throw new ArgumentException("Chromosome length has to be greater than 0.");
             Genes = new List<Gene>(length);
-            Random random = new Random();
+            Random random = new();
             this.Length = length;
             int i;
             for (i = 0; i < length; i++)
-                Genes.Add(random.Next(0, 2) == 0 ? Gene.ZERO : Gene.ONE);
+                Genes.Insert(i, random.Next(0, 2) == 0 ? Gene.ZERO : Gene.ONE);
         }
 
         /// <summary>
@@ -44,20 +43,25 @@ namespace GeneticAlgorithm
         /// <exception cref="System.ArgumentException">
         /// Thrown when there is an element other than "0" or "1" in "elements" array.
         /// </exception>
-        public Genome(int[] elements)
+        public Chromosome(int[] elements)
         {
             Genes = new List<Gene>();
             for (int i = 0; i < elements.Length; i++)
             {
-                if (elements[i] == 0) Genes.Add(Gene.ZERO);
-                else if (elements[i] == 1) Genes.Add(Gene.ONE);
-                else throw new ArgumentException();
+                if (elements[i] == 0) Genes.Insert(i, Gene.ZERO);
+                else if (elements[i] == 1) Genes.Insert(i, Gene.ONE);
+                else throw new ArgumentException("Genes cannot be value different than 0 or 1.");
             }
         }
 
-        public Genome Copy()
+        public Chromosome Copy()
         {
-            return (Genome) this.MemberwiseClone();
+            return (Chromosome) this.MemberwiseClone();
+        }
+
+        public Gene GetGene(int index)
+        {
+            return Genes[index];
         }
     }
 }

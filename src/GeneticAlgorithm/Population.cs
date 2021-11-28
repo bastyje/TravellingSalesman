@@ -5,139 +5,122 @@ namespace GeneticAlgorithm
 {
     public class Population
     {
-        private int _size;
-        public List<Genome> Genomes { get; set; }
-        private double _probabilityOfMutation;
+        private readonly int _size;
+        public List<Chromosome> Chromosomes { get; }
+        private List<Chromosome> _newPopulation;
+        private readonly double _probabilityOfCrossover;
+        private readonly double _probabilityOfMutation;
+        private Reproduction _wheelOfFortune;
 
-        public Population(List<Genome> population, double probability)
+        public Population(List<Chromosome> population, double pMutation, double pCrossover)
         {
-            this._probabilityOfMutation = (probability >= 0 || 1 > probability) 
-                ? probability : throw new ArgumentException();
-            this.Genomes = population ?? throw new NullReferenceException();
-            this._size = population.Count;
+            this._probabilityOfMutation = (pMutation >= 0 || 1 > pMutation) ? pMutation : throw new ArgumentException("Probability of mutation has to be in range <0, 1>.");
+            this._probabilityOfCrossover = (pCrossover >= 0 || 1 > pCrossover) ? pCrossover : throw new ArgumentException("Probability of crossover has to be in range <0, 1>."); 
+            this.Chromosomes = population ?? throw new NullReferenceException();
+            this._size = population.Count % 2 == 0 ? population.Count : throw new ArgumentException("Population size should be even.");
         }
 
-        public Population(int size, int genomeSize, double probability)
+        public Population(int popSize, int genomeSize, double pMutation, double pCrossover)
         {
-            if (!(genomeSize > 0)) throw new ArgumentException();
-            this._probabilityOfMutation = (probability >= 0 || 1 > probability)
-                ? probability : throw new ArgumentException();
-            this._size = size > 0 ? size : throw new ArgumentException();
-            this.Genomes = new List<Genome>(size);
-            for (int i = 0; i < size; i++) 
-                Genomes.Add(new Genome(genomeSize));
+            this._probabilityOfMutation = (pMutation >= 0 || 1 > pMutation) ? pMutation : throw new ArgumentException("Probability of mutation has to be in range <0, 1>.");
+            this._probabilityOfCrossover = (pCrossover >= 0 || 1 > pCrossover) ? pCrossover : throw new ArgumentException("Probability of crossover has to be in range <0, 1>.");
+
+            if (popSize <= 0) throw new ArgumentException("Population size cannot be less than or equal 0.");
+            else if (popSize % 2 != 0) throw new ArgumentException("Population size should be even.");
+            else this._size = popSize;
+
+            this.Chromosomes = new List<Chromosome>(popSize);
+
+            if ((genomeSize > 0)) throw new ArgumentException("Genome size cannot be less than or eqal 0.");
+            for (int i = 0; i < popSize; i++)
+                Chromosomes.Add(new Chromosome(genomeSize));
         }
 
         public void NextGeneration()
         {
-            Select();
+            _wheelOfFortune = new Reproduction(Chromosomes);
             Crossover();
             Mutate();
         }
 
-        private void Select()
+        private Chromosome Select()
         {
-            Reproduction wheel = new Reproduction(Genomes);
-            List<Genome> tmp = new List<Genome>();
-            Genome result;
-            for (int i = 0; i < Genomes.Count / 2; i++)
-            {
-                tmp.Add(result = wheel.Spin());
-                tmp.Add(result.Copy());
-            }
-            Genomes = tmp;
-        }
-
-        private void Pair()
-        {
-            Random random = new Random();
-            int index;
-            for (int i = 0; i < Genomes.Count; i++)
-            {
-                index = random.Next(0, _size);
-                if (Genomes[i].Pair == null && Genomes[index].Pair == null && i != index)
-                {
-                    Genomes[i].Pair = Genomes[index];
-                    Genomes[index].Pair = Genomes[i];
-                }
-                else if (Genomes[i].Pair != null) continue;
-                else i--;
-            }
+            return _wheelOfFortune.Spin();
         }
 
         private void Crossover()
         {
-            Pair();
-            Genome tmp1, tmp2;
-            Random random = new Random();
-            int index;
-            for (int i = 0; i < Genomes.Count; i++)
+            for (int i = 0; i < this._size / 2; i++)
             {
-                index = random.Next(0, Genomes[i].Genes.Count);
-                tmp1 = Genomes[i].Copy();
-                tmp2 = Genomes[i].Pair.Copy();
-                for (int j = index; j < Genomes[i].Genes.Count; j++)
+                Crossover(Select(), Select());
+            }
+        }
+
+        private void Crossover(Chromosome parent1, Chromosome parent2)
+        {
+            Random random = new();
+            if (_probabilityOfCrossover > random.NextDouble())
+            {
+                List<Gene> genes1 = new(parent1.Length), genes2 = new(parent2.Length);
+                int crossingIndex = random.Next(1, genes1.Count);
+
+                for (int i = 0; i < genes1.Count; i++)
                 {
-                    Genomes[i].Genes[j] = tmp2.Genes[j];
-                    Genomes[i].Pair.Genes[j] = tmp1.Genes[j];
+                    genes1.Insert(i, i < crossingIndex ? parent1.GetGene(i) : parent2.GetGene(i));
+                    genes2.Insert(i, i < crossingIndex ? parent2.GetGene(i) : parent1.GetGene(i));
                 }
+
+                _newPopulation.Add(new Chromosome(genes1));
+                _newPopulation.Add(new Chromosome(genes2));
             }
         }
 
         private void Mutate()
         {
-            Random random = new Random();
-            double randVal;
-            for (int i = 0; i < Genomes.Count; i++)
+            Random random = new();
+            for (int i = 0; i < Chromosomes.Count; i++)
+                for (int j = 0; j < Chromosomes[i].Genes.Count; j++)
+                    if (random.NextDouble() < _probabilityOfMutation)
+                        Chromosomes[i].Genes[j] = Chromosomes[i].Genes[j].Equals(Gene.ONE) ? Gene.ZERO : Gene.ONE;
+        }
+        class Reproduction
+        {
+            private readonly List<Field> _fields;
+            private readonly int _sum;
+
+            public Reproduction(List<Chromosome> genomes)
             {
-                for (int j = 0; j < Genomes[i].Genes.Count; j++)
+                _fields = new List<Field>();
+                int sum = 0;
+                foreach (Chromosome genome in genomes)
                 {
-                    randVal = random.NextDouble();
-                    if (0 <= randVal && randVal < _probabilityOfMutation)
-                        Genomes[i].Genes[j] = Genomes[i].Genes[j].Equals(Gene.ONE) 
-                            ? Gene.ZERO : Gene.ONE;
+                    sum += genome.Adaptation;
+                    _fields.Add(new Field(sum - genome.Adaptation, sum, genome));
+                    _sum = sum;
                 }
             }
-        }
-    }
 
-    class Reproduction
-    {
-        private List<Field> _fields;
-        private int _sum;
-
-        public Reproduction(List<Genome> genomes)
-        {
-            _fields = new List<Field>();
-            int sum = 0;
-            foreach (Genome genome in genomes)
+            public Chromosome Spin()
             {
-                sum += genome.Adaptation;
-                _fields.Add(new Field(sum - genome.Adaptation, sum, genome));
-                _sum = sum;
+                Random random = new();
+                int result = random.Next(0, _sum);
+                foreach (Field field in _fields)
+                    if (field.Start <= result && result < field.End) return field.Gen;
+                return null;
             }
-        }
 
-        public Genome Spin()
-        {
-            Random random = new Random();
-            int result = random.Next(0, _sum);
-            foreach (Field field in _fields)
-                if (field.Start <= result && result < field.End) return field.Gen;
-            return null;
-        }
-
-        class Field
-        {
-            public int Start { get; }
-            public int End { get; }
-            public Genome Gen { get; }
-
-            public Field(int start, int end, Genome gen)
+            class Field
             {
-                this.Start = start;
-                this.End = end;
-                this.Gen = gen;
+                public int Start { get; }
+                public int End { get; }
+                public Chromosome Gen { get; }
+
+                public Field(int start, int end, Chromosome gen)
+                {
+                    this.Start = start;
+                    this.End = end;
+                    this.Gen = gen;
+                }
             }
         }
     }
