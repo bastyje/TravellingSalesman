@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GeneticAlgorithm": {
+      "commandName": "Project",
+      "commandLineArgs": "1000 0.25 0.9 100 f(x)=-0.5*x^2+10*x+13 -1 21"
+    }
+  }
+}

@@ -17,7 +17,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{30CF2A0E-6FF8-419B-BAE3-CCC6B70E934B}"
 	ProjectSection(SolutionItems) = preProject
 		docs\AE_lab05.pdf = docs\AE_lab05.pdf
-		docs\basic_doc.md = docs\basic_doc.md
+		docs\documentation.md = docs\documentation.md
 	EndProjectSection
 EndProject
 Global

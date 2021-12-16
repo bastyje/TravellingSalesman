@@ -5,18 +5,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GeneticAlgorithmTest
 {
     [TestClass]
-    public class GenomeTest
+    public class ChromosomeTest
     {
         [TestMethod]
-        public void Genome_GivenArrayWithZerosAndOnesOnly_CreatesGenomeObject()
+        public void Chromosome_GivenArrayWithZerosAndOnesOnly_CreatesGenomeObject()
         {
             int[] array = { 1, 0, 1, 1, 0 };
-            Chromosome genome = new Chromosome(array);
-            Assert.IsInstanceOfType(genome, typeof(Chromosome));
+            Chromosome chromosome = new Chromosome(array);
+            Assert.IsInstanceOfType(chromosome, typeof(Chromosome));
         }
 
         [TestMethod]
-        public void Genome_GivenIntPositiveInt_CreatesGenomeObject()
+        public void Chromosome_GivenIntPositiveInt_CreatesGenomeObject()
         {
             Chromosome genome = new Chromosome(5);
             Assert.IsInstanceOfType(genome, typeof(Chromosome));
@@ -24,7 +24,7 @@ namespace GeneticAlgorithmTest
 
         [TestMethod]
         [ExpectedException(typeof(System.ArgumentException))]
-        public void Genome_GivenArrayWithNotOnlyZerosAndOnes_ThrowsArgumentException()
+        public void Chromosome_GivenArrayWithNotOnlyZerosAndOnes_ThrowsArgumentException()
         {
             int[] array = { 1, 2, 1, 0, 1 };
             new Chromosome(array);
@@ -32,16 +32,23 @@ namespace GeneticAlgorithmTest
 
         [TestMethod]
         [ExpectedException(typeof(System.ArgumentException))]
-        public void Genome_GivenNegativeInt_ThrowsArgumentException()
+        public void Chromosome_GivenNegativeInt_ThrowsArgumentException()
         {
             new Chromosome(-1);
         }
 
         [TestMethod]
         [ExpectedException(typeof(System.ArgumentException))]
-        public void Genome_GivenIntEqualZero_ThrowsArgumentException()
+        public void Chromosome_GivenIntEqualZero_ThrowsArgumentException()
         {
             new Chromosome(0);
+        }
+
+        [TestMethod]
+        public void Decode_Called_ReturnsActualChromosomeValueInDecimalSystem()
+        {
+            int[] arr = { 1, 0, 1 };
+            Assert.AreEqual(new Chromosome(arr).Decode(0, 7), 5);
         }
     }
 }
