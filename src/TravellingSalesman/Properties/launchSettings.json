@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GeneticAlgorithm": {
+      "commandName": "Project",
+      "commandLineArgs": "100 0.001 0.6 10 ../../../../../data/cities.txt"
+    }
+  }
+}

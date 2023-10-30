@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using GeneticAlgorithm;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithmTest

@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneticAlgorithmTest", "test\GeneticAlgorithmTest\GeneticAlgorithmTest.csproj", "{91DA1932-AB7E-4A7F-B64C-9B63724B130E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7813430B-B744-48F0-AB53-811E476AA63D}"
+	ProjectSection(SolutionItems) = preProject
+		i.txt = i.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{BFB250C4-0CD8-4DB4-84DF-6324E119E65A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{30CF2A0E-6FF8-419B-BAE3-CCC6B70E934B}"
+	ProjectSection(SolutionItems) = preProject
+		docs\AE_lab05.pdf = docs\AE_lab05.pdf
+		docs\documentation.md = docs\documentation.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneticAlgorithmLib", "src\GeneticAlgorithmLib\GeneticAlgorithmLib.csproj", "{21236374-2CB1-40E4-8833-95B05A2DEB2F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TravellingSalesman", "src\TravellingSalesman\TravellingSalesman.csproj", "{A2EECD52-9B66-43CC-A952-C8B393E018E7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91DA1932-AB7E-4A7F-B64C-9B63724B130E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91DA1932-AB7E-4A7F-B64C-9B63724B130E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91DA1932-AB7E-4A7F-B64C-9B63724B130E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91DA1932-AB7E-4A7F-B64C-9B63724B130E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21236374-2CB1-40E4-8833-95B05A2DEB2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21236374-2CB1-40E4-8833-95B05A2DEB2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21236374-2CB1-40E4-8833-95B05A2DEB2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21236374-2CB1-40E4-8833-95B05A2DEB2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2EECD52-9B66-43CC-A952-C8B393E018E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2EECD52-9B66-43CC-A952-C8B393E018E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2EECD52-9B66-43CC-A952-C8B393E018E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2EECD52-9B66-43CC-A952-C8B393E018E7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{91DA1932-AB7E-4A7F-B64C-9B63724B130E} = {BFB250C4-0CD8-4DB4-84DF-6324E119E65A}
+		{21236374-2CB1-40E4-8833-95B05A2DEB2F} = {7813430B-B744-48F0-AB53-811E476AA63D}
+		{A2EECD52-9B66-43CC-A952-C8B393E018E7} = {7813430B-B744-48F0-AB53-811E476AA63D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7220FDE2-A42D-4C39-AE6F-B99C6CD00305}
+	EndGlobalSection
+EndGlobal

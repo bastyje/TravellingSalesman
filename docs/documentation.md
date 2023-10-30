@@ -1,87 +1,86 @@
 # Treść zadania
 
-Napisać program umożliwiający znalezienie maksimum funkcji dopasowania jednej zmiennej 
-określonej dla liczb całkowitych w zadanym zakresie przy pomocy elementarnego algorytmu 
-genetycznego (reprodukcja z użyciem nieproporcjonalnej ruletki, krzyżowanie proste, mutacja 
-równomierna). Program powinien umożliwiać użycie różnych funkcji dopasowania, populacji o 
-różnej liczebności oraz różnych parametrów operacji genetycznych (krzyżowania i mutacji). 
-Program powinien zapewnić wizualizację wyników w postaci wykresów  średniego, maksymalnego 
-i minimalnego przystosowania dla kolejnych populacji oraz wykresu funkcji w zadanym przedziale. 
+Napisać  program  rozwiązujący  problem  komiwojażera  (minimalizacja  drogi  pomiędzy  n 
+miastami  bez  powtórzeń)  przy  pomocy  algorytmu  genetycznego.  Zastosować  reprodukcję 
+przy użyciu nieproporcjonalnej ruletki, operator krzyżowania CX, oraz mutację równomierną. 
+
+Program  powinien  umożliwiać  użycie  różnych  wielkości  populacji,  liczby  iteracji, 
+prawdopodobieństwa mutacji.  
  
-Program przetestować dla funkcji f(x)= -0.5x 2 +10x+13 dla x= -1, 0, ... 21
+Program  powinien  zapewnić  wizualizację  wyników  w  postaci  wykresów  średniego, 
+maksymalnego i minimalnego przystosowania (długości trasy) dla kolejnych populacji oraz 2 
+map  (o  wymiarach  10x10  punktów),  na  których  będą  wyświetlane  miasta  oraz  drogi 
+najdłuższa i najkrótsza. 
+ 
+Pokazać działanie programu na danych testowych składających się z 10 miast, opisanych za 
+pomocą współrzędnych na mapie o wymiarach 10x10 punktów. 
+ 
+Dane testowe: miasta: 
+A(2,1), B(9,7), C(6,5), D(1,7), E(3,6), F(5,6), G(4,2), H(10, 4), I(7,3), J(8,10) 
 
 # Informacje ogólne
 
-Program Genetic Algorithm implementuje algorytm genetyczny, który umożliwia znalezienie maksimum funkcji dopasowania jednej zmiennej w zadanej dziedzinie liczb całkowitych.
+Program Genetic Algorithm implementuje algorytm genetyczny, który umożliwia znalezienie najkrótszej drogi prowadzącej przez wszystkie miasta tak, aby każde z nich było odwiedzone tylko raz.
 
 ### Genetic Algorithm implementuje takie operacje jak:
 - reprodukcja z użyciem nieproporcjonalnej ruletki
-- krzyżowanie proste
+- krzyżowanie CX
 - mutacja równomierna
 
 ### Użytkownik ma wpływ na:
-- wzór przekazanej funkcji
 - rozmiar populacji
 - parametry krzyżowania
 - parametry mutacji
+- lokalizacje, nazwy i liczbę miast
 
 ### Wynik działania programu jest na bieżąco wizualizowany za pomocą wykresów:
 - średniego przystosowania
 - maksymalnego przystosowania
 - minimalnego przystosowania
-- wykresu funkcji w zadanym wcześniej przedziale
+- wizualizacji mapy miast za pomocą wykresu punktowego
 
 ## Reprodukcja
-
 1. Na podstwie funkcji przystosowania obliczane jest przystosowanie każdego osobnika. *Prawdopodobieństwo wyboru* danego osobnika do reprodukcji obliczane jest poprzez podzielenie wartości funkcji przystosowania przez sumę wartości funkcji przystosowania wszystkich elementów populacji.
 2. Operacja `Select()` implementująca reprodukcję wybiera jeden ciąg kodowy korzystając z mechanizmu opisanego w punkcie `1`.
-3. Operacja `Select()` powtarzana jest aż do otrzymania nowej populacji w liczbie równej rozmiarowi poprzedniej symulacji.
+3. Operacja `Select()` powtarzana jest aż do otrzymania nowej populacji w liczbie równej rozmiarowi poprzedniej populacji.
 
 ## Krzyżowanie
-
 1. Wybrane do krzyżowania osobniki są wynikiem dwukrotnego uruchomienia operacji odpowiedzialnej za reprodukcję.
 2. Krzyżowanie jest przeprowadzane z prawdopodobieństwem równym zadanemu prawdopodobieństwu krzyżowania.
-3. Dla ciągu kodowego o długości l, w sposób losowy z jednostajnym rozkładem prawdopodobieństwa wybierana jest liczba *i* z zakresu 1-(l - 1), która reprezentuje pierwszy indeks ciągu kodowego, który podlega operacji krzyżowania.
-4. Elementy ciągu kodowego z zakresu *i*-(l - 1) zamieniają się pomiędzy sparowanymi ciągami kodowymi.
+3. Jako pierwszy wybierany jest pierwszy gen (o indeksie `0`) rodzica pierwszego (*parent1*) i zapisany w zmiennej *startingGene*. Odpowiadający mu indeksem gen w *parent2* zapisywany jest w zmiennej *gene*. Następnie dopóki *gene* != *startingGene* powtarzane są następujące operacje:
+    1. W ciągu kodowym *parent1* wyszukiwany jest element o wartości równej tej zapisanej w *gene*.
+    2. Do zmiennej *gene* przypisywana jest wartość z ciągu *parent2* o odpowiadającym indeksie wartości *gene* w *parent1*.
 
 ## Mutacja
-
 1. Operacja jest przeprowadzana na każdym po kolei ciągu kodowym (chromosomie) z populacji.
 2. Następuje iteracja po każdym allelu chromosomu.
 3. Dla każdego allela operacja mutacji jest przeprowadzana z prawdopodobieństwem równym zadanemu prawdopodobieństwu mutacji.
-4. Wartość allela zmieniana jest na przeciwną.
+4. Wartość *m* allela zmieniana jest na *n* losową z przedziału `<0, size)`, gdzie size to rozmiar ciągu kodowego.
+5. Następnie w ciągu kodowym wyszukiwana jest zmienna przechowująca zmienną o wartości *n* i przypisuje jej wartość *m*.
 
 # Instrukcja obsługi
-
 1. Program należy uruchomić z linii komend, bądź za pomocą środowiska Visual Studio.
 2. W każdym przypadku należy do programu przekazać listę argumentów. Pełna lista znajduje się poniżej. Wszystkie argumenty są obowiązkowe. Dla niektórych z nich obowiązują ograniczenia.
-3. Program na bieżąco będzie informował o błędnych danych, oraz będzie wyświetlał statystyki dla każdego pokolenia.
-4. Po zakończeniu działania programu wyniki w postaci wykresów przystosowania i wykresu funkcji można znaleźć w katalogu `results` w katalogu głównym projektu.
+3. Program na bieżąco będzie informował o błędnych danych.
+4. Po zakończeniu działania programu wyniki w postaci wykresów przystosowania i wykresu funkcji można znaleźć w katalogu `results` w katalogu głównym projektu. W konsoli zostanie także wyświetlony najlepiej przystosowany chromosom.
 
 ```
-
-GeneticAlgorithm:
-  App uses genetic algorithm to find maximum of function of one variable defined for integers.
+TravellingSalesman:
+  App uses genetic algorithm to solve Blind Travelling Salesman problem.
 
 Usage:
-  GeneticAlgorithm [options] <pop-size> <mut-prob> <crs-prob> <end-cond> <fit-func> <dom-start> <dom-end>
+  TravellingSalesman [options] <pop-size> <mut-prob> <crs-prob> <iter> <path>
 
 Arguments:
-  <pop-size>     Size of population. Only integer values allowed.
-  <mut-prob>     Probability of mutation of single gene. Only values between 0 and 1 allowed.
-  <crs-prob>     Probability of crossover of two chromosomes. Only values between 0 and 1 allowed.
-  <end-cond>     Number of generations of population without progress (the best adaptation of genome
-                 has not risen since end-cond number of generations.
-  <fit-func>     Function of fitness of chromosome. Search process is based on this function values.
-                 This program supports one variable functions. Variable should be named 'x'.
-                 Example of input: f(x)=-0.5*x^2+10x+13
-  <dom-start>    Begenning of domain (inclusive) of fitness function. Only integer values.
-  <dom-end>      End of domain (inclusive) of fitness function. Only integer values.
+  <pop-size>    Size of population. Only positive, even integer values allowed.
+  <mut-prob>    Probability of mutation of single gene. Only values between 0 and 1 allowed.
+  <crs-prob>    Probability of crossover of two chromosomes. Only values between 0 and 1 allowed.
+  <iter>        Number of algorithm iterations. Only values higher or equal 0.
+  <path>        Path to file with cities coordinates.
 
 Options:
   --version         Show version information
   -?, -h, --help    Show help and usage information
-
 ```
 
 ### `pop-size`
@@ -93,36 +92,23 @@ Prawdopodobieństwo mutacji. Musi być to liczba z zakresu <0, 1> są akceptowan
 ### `crs-prob`
 Prawdopodobieństwo krzyżowania. Musi być to liczba z zakresu <0, 1> są akceptowane.
 
-### `end-cond`
-Liczba pokoleń populacji.
+### iter
+Liczba iteracji algorytmu (liczba pokoleń). Musi byc to liczba większa lub równa 0;
 
-### `fit-func`
-Funkcja przystosowania, którą program będzie badał. Funkcja powinna być podana w postaci: `f(x)=wyrażenie`. Przykład: `f(x)=2*x^2`. Pomiędzy kolejnymi elementami wyrażenia powinny się znajdować operatory arytmetyczne. W równaniu nie powinny występować spacje.
+### path
+Ścieżka do pliku z danymi wejściowymi. Dane wejściowe mają ściśle określony format w postaci: `<nazwa_miasta> <x> <y>`.
 
-### `dom-start`
-Początek dziedziny, na której funkcja będzie badana.
+# Przykład działania
+Przykładowe uruchomienie programu będzie dla miast zadanych w treści zadania:
+A(2,1), B(9,7), C(6,5), D(1,7), E(3,6), F(5,6), G(4,2), H(10, 4), I(7,3), J(8,10) 
 
-### `dom-end`
-Koniec dziedziny, na której funkcja będzie badana.
+Parametry wywołania:
+`100 0.001 0.6 10 ../../../../../data/cities.txt`
 
-# Testy
+Wyświetlony przez program rzekomo najlepszy chromosom: `DEFCJHBIGA`
 
-Jak widać, w poniższych testach poprawną wartość maksimum dla zadanej funkcji program wyznaczył tylko raz, dla bardzo dużego rozmiaru populacji.
+### Mapa
+![mapa](images/map.png)
 
-### Test 1
-
-Parametry wywołania: `10 0.05 0.2 100 f(x)=-0.5*x^2+10*x+13 -1 21`
-
-![report1](test_results/report1.png)
-
-### Test 2
-
-Parametry wywołania: `100 0.01 0.6 100 f(x)=-0.5*x^2+10*x+13 -1 21`
-
-![report2](test_results/report2.png)
-
-### Test 3
-
-Parametry wywołania: `1000 0.25 0.9 100 f(x)=-0.5*x^2+10*x+13 -1 21`
-
-![report3](test_results/report3.png)
+### Wykresy
+![wykresy](images/report.png)
